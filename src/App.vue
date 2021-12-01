@@ -1,17 +1,33 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Table :columns="columns" :data="List">
+        <template #age="{ row, index }">
+            <span style="color: red;">{{ row.age }}-{{ index }}</span>
+        </template>
+    </Table>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import Table from './components/Table/index.vue'
+const columns = [
+    { label: '姓名', prop: 'name', showTip: true  },
+     { label: '年龄', prop: 'age', customRender: { slot: 'age' }  },
+     { label: '地址', prop: 'address'  }
+]
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Table
+  },
+  data() {
+      return {
+          columns,
+          List: [
+              { name: 'faelssim', age: 40, address: 'China Suzhou.' },
+              { name: 'faelssim', age: 30, address: 'China Suzhou.' }
+          ]
+      }
   }
 }
 </script>
