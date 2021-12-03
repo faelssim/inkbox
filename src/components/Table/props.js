@@ -1,3 +1,10 @@
+/*
+ * @Author: wangkun
+ * @Date: 2021-12-01 13:56:54
+ * @LastEditTime: 2021-12-03 14:36:54
+ * @LastEditors: wangkun
+ * @Description: 
+ */
 const props = {
     columns: {
         type: Array,
@@ -11,6 +18,10 @@ const props = {
     action: {
         type: String,
         default: ''
+    },
+    editable: {
+        type: Boolean,
+        default: false
     },
     border: {
         type: Boolean,
