@@ -8,6 +8,9 @@
 <template>
     <div>
         <el-table
+            cell-class-name="_table-cell"
+            header-row-class-name="_table-header"
+            :row-key="rowKey"
             :border="border !== undefined"
             :data="data"
             :stripe="stripe"
@@ -30,7 +33,9 @@
                             :row="row"
                             :index="$index"
                             :prop="col.prop"
-                            @value-change="handleValueChange"
+                            :required="col.required"
+                            v-bind="col"
+                            @[VALUE_CHANGE]="handleValueChange"
                         />
                     </template>
                     <template v-else>
@@ -55,19 +60,21 @@
 import props from './props'
 import useInit from './useInit'
 import useTable from './useTable'
-import usePagination from './usePagination'
+import useListener from './useListener'
 import useEdit from './useEdit'
+import useSortable from './useSortable'
+import usePagination from './usePagination'
 import EditCell from './EditCell.vue'
+import { VALUE_CHANGE } from './eventName'
 export default {
-    name: 'FTable',
-    mixins: [useInit, useTable, usePagination, useEdit],
+    name: 'Table',
+    mixins: [useInit, useTable, useListener, useEdit, useSortable, usePagination],
     props,
     components: { EditCell },
     data() {
-        return { }
-    },
-    mounted() {
-        // this.action && this.getTableData()
+        return {
+            VALUE_CHANGE
+         }
     }
 }
 </script>
@@ -76,5 +83,21 @@ export default {
 .table-pagination{
     padding: 10px  0;
     text-align: right;
+}
+</style>
+<style>
+._table-header .el-table__cell{
+    background-color: #f0f0f0 !important;
+    padding: 5px 0 !important;
+    color: #333;
+    font-weight: normal;
+    font-size: 13px;
+}
+._table-cell{
+    padding: 0 !important;
+    height: 40px;
+}
+._table-ghost{
+    background: #d4f3ff !important;
 }
 </style>

@@ -7,7 +7,7 @@
 -->
 <template>
   <div id="app">
-    <Table :columns="columns" :data="List" :editable="true">
+    <Table :columns="columns" :data.sync="List" row-key="id" editable sortable>
       <template #age="{ row }">
         <span style="color: deepskyblue">{{ row.age }}</span>
       </template>
@@ -29,10 +29,10 @@ export default {
   computed: {
     columns() {
       return [
-        { label: 'ID', prop: 'id', component: 'el-input' },
+        { label: 'ID', prop: 'id', component: 'el-input', required: true },
         { label: "姓名", prop: "name", showTip: true },
         { label: "年龄", prop: "age", customRender: { slot: "age" } },
-        { label: "地址", prop: "address" },
+        { label: "地址", prop: "address", component: 'el-select', options: { data: [ { label: 'Suzhou', value: 'Suzhou' }, { label: 'Changzhi', value: 'Changzhi' }, { label: 'Shanghai', value: 'Shanghai' } ] } },
       ]
     }
   },
@@ -45,9 +45,9 @@ export default {
     for (let i = 0; i < 10; i++) {
       this.List.push({
         id: Math.floor(Math.random() * 1000000000).toString(32),
-        name: '蓝叶_' + i,
+        name: 'Blue_' + i, // 蓝叶
         age: Math.ceil(Math.random() * 60) + 10,
-        address: 'Jiangsu Suzhou CCIP.'
+        address: 'Shanghai'
       })
     }
   },

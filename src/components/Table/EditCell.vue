@@ -8,18 +8,29 @@
 <template>
     <div @click="handleCellClick" @mousedown="handleMousedownCell">
         <component
+            class="_table-cell-component"
             v-if="editable"
             v-model="value"
-            size="small"
+            size="mini"
             :is="name"
             :ref="refName"
             @blur="handleCellBlur"
-        ></component>
+        >
+            <template v-if="name === 'el-select'">
+                <el-option
+                    v-for="item of optionData"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                ></el-option>
+            </template>
+        </component>
         <template v-else>{{ row[prop] }}</template>
     </div>
 </template>
 <script>
 // let timeoutId = null
+import { SET_EDIT_CELL, VALUE_CHANGE } from './eventName'
 export default {
     props: {
         name: String,
@@ -31,7 +42,15 @@ export default {
     },
     data() {
         return {
-            isResolveBlur: true
+            isResolveBlur: true,
+            oldValue: ''
+        }
+    },
+    watch: {
+        editable(nv) {
+            nv && this.$nextTick(() => {
+                this.setRefFocus()
+            })
         }
     },
     computed: {
@@ -44,42 +63,55 @@ export default {
             },
             set(nv) {
                 const { prop, index } = this
-                this.$emit('value-change', {
+                this.$emit(VALUE_CHANGE, {
                     value: nv,
                     prop,
                     index
                 })
             }
+        },
+        optionData() {
+            return this.$attrs.options.data
         }
     },
     methods: {
-        setRefFocus() {
-            this.$refs[this.refName].focus()
+        emitEditEvent(eventName = '', payload) {
+            eventName && this.$eventBus.$emit(eventName, payload)
         },
-        emitEditEvent(prop = '', index = '') {
-            console.log(prop)
-             this.$eventBus.$emit('set-edit-cell', {
-                prop,
-                index
-            })
+        setRefFocus() {
+            this.$refs[this.refName].focus && this.$refs[this.refName].focus()
         },
         handleMousedownCell() {
+            this.oldValue = this.row[this.prop]
             this.isResolveBlur = false
         },
         handleCellBlur() {
-            this.isResolveBlur && this.emitEditEvent()
+            if (this.isResolveBlur) {
+                this.required && this.row[this.prop] === '' && this.$emit(VALUE_CHANGE, {
+                    value: this.oldValue,
+                    prop: this.prop,
+                    index: this.index
+                })
+                this.emitEditEvent(SET_EDIT_CELL, {
+                    prop: '',
+                    index: ''
+                })
+            }
         },
         handleCellClick() {
             const { index, prop } = this
-            this.emitEditEvent(prop, index)
+            // 编辑当前单元格
+            this.emitEditEvent(SET_EDIT_CELL,  {
+                prop,
+                index
+            })
             this.isResolveBlur = true
-            setTimeout(() => {
-                // this.setRefFocus()
-            }, 1000)
-            // this.$nextTick(() => {
-            //     // this.setRefFocus()
-            // })
         },
     }
 }
 </script>
+<style lang="less" scoped>
+._table-cell-component{
+    width: 100%;
+}
+</style>

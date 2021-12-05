@@ -15,6 +15,7 @@ const props = {
         type: Array,
         default: () => []
     },
+    rowKey: String,
     action: {
         type: String,
         default: ''
@@ -30,6 +31,10 @@ const props = {
     stripe: {
         type: Boolean,
         default: true
+    },
+    sortable: {
+        type: Boolean,
+        default: false
     },
     isPagination: {
         type: Boolean,

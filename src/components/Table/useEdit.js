@@ -10,13 +10,8 @@ export default {
         return {
             editRowIndex: '',
             editColProp: '',
+            isEditCell: false
         }
-    },
-    mounted() {
-        this.$eventBus.$on('set-edit-cell', ({ index, prop }) => {
-            this.editRowIndex = index
-            this.editColProp = prop
-        })
     },
     beforeDestory() {
         // TODO: remove listener

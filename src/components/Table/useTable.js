@@ -6,10 +6,19 @@
  * @Description: 
  */
 export default {
+    data() {
+        return {
+            isChangeByInner: false, // 内部一些变化引起data的变化. ps:在这种情况下不去做watch的处理
+        }
+    },
     watch: {
         data: {
             handler(nv) {
-                console.log('change')
+                console.log('change....')
+                // 变化不是由编辑引起的
+                if (!this.isChangeByInner) {
+                    console.log('change from outer')
+                }
             },
             deep: true,
             immediate: false
@@ -18,6 +27,7 @@ export default {
     methods: {
         getTableData() {
             console.log(this)
-        }
+        },
+        
     }
 }
